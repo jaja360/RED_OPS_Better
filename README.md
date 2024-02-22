@@ -45,72 +45,29 @@ you could contact your provider to have these packages installed.
 Configuration
 -------------
 
-You've made it far! Congratulations. Open up the file 
-config in a text editor. You're going to see something
-like this:
+You've made it far! Congratulations. Open up the file `config` in a text editor.
 
-	[RED]
-	username = 
-	password = 
-	session_cookie = 
-	data_dir = 
-	output_dir = 
-	torrent_dir = 
-	formats = flac, v0, 320
-	media = dat, cd, soundboard, web, sacd, vinyl, dvd, blu-ray
-	24bit_behaviour = 0
-	tracker = https://flacsfor.me/
-	api = https://redacted.ch
-	source = RED
-	piece_length = 18
-
-	[OPS]
-	username = 
-	password = 
-	session_cookie = 
-	data_dir = 
-	output_dir = 
-	torrent_dir = 
-	formats = flac, v0, 320
-	media = sacd, vinyl, soundboard, web, blu-ray, dat, cd, dvd
-	24bit_behaviour = 0
-	tracker = https://home.opsfet.ch/
-	api = https://orpheus.network
-	source = OPS
-	piece_length = 18
-
-`username` and `password` are your Redacted and Orpheus login credentials(Not required if using session_cookie). 
-
-`session_cookie` working session cookie for tracker of your choice.
-
-`data_dir` is the directory where your downloads are stored. 
-
-`output_dir` is the directory where your transcodes will be created. If
-the value is blank, `data_dir` will be used. You can also specify
-per format values such as `output_dir_320` or `output_dir_v0`.
-
-`torrent_dir` is the directory where torrents should be created (e.g.,
-your watch directory). Same per format settings as output_dir apply.
-
-`formats` is a list of formats that you'd like to support.
-
-`media` is a list of lossless media types you want to consider for
-transcoding. The default value is all What.CD lossless formats, but if
-you want to transcode only CD and vinyl media, for example, you would
-set this to 'cd, vinyl'.
-
-`24bit_behaviour` defines what happens when the program encounters a FLAC 
-that it thinks is 24bits. If it is set to '2', every FLAC that has a bits-
-per-sample property of 24 will be silently re-categorized. If it set to '1',
-a prompt will appear. The default is '0' which ignores these occurrences.
-
-`tracker` is the base url to use in the torrent files.
-
-`api` is the base url to use for api requests.
-
-`source` source flag for tracker.
-
-`piece_length` used with MKtorrent default value.
+- `username` and `password` are your Redacted and Orpheus login credentials(Not required if using session_cookie). 
+- `session_cookie` working session cookie for tracker of your choice.
+- `data_dir` is the directory where your downloads are stored. 
+- `output_dir` is the directory where your transcodes will be created.
+    If the value is blank, `data_dir` will be used. You can also specify per format
+    values such as `output_dir_320` or `output_dir_v0`.
+- `torrent_dir` is the directory where torrents should be created (e.g.,
+    your watch directory). Same per format settings as `output_dir` apply.
+- `formats` is a list of formats that you'd like to support.
+- `media` is a list of lossless media types you want to consider for
+    transcoding. The default value is all What.CD lossless formats, but if you
+    want to transcode only CD and vinyl media, for example, you would set this
+    to 'cd, vinyl'.
+- `24bit_behaviour` defines what happens when the program encounters a FLAC 
+    that it thinks is 24bits. If it is set to '2', every FLAC that has a bits-
+    per-sample property of 24 will be silently re-categorized. If it set to '1',
+    a prompt will appear. The default is '0' which ignores these occurrences.
+- `tracker` is the base url to use in the torrent files.
+- `api` is the base url to use for api requests.
+- `source` source flag for tracker.
+- `piece_length` used with MKtorrent default value.
 
 Usage
 -----
@@ -157,7 +114,6 @@ For RED
 For OPS
 
     $ ./red_ops_better -T OPS
-
 
 To transcode and upload a specific release (provided you have already
 downloaded the FLAC and it is located in your `data_dir`):
