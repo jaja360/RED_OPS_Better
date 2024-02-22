@@ -5,11 +5,12 @@ Introduction
 Autonomous transcoder for Redacted or Orpheus
 --
 
-red_ops_better is a script which automatically transcodes and uploads these files to Redacted or Orpheus.
+red_ops_better is a script which automatically transcodes and uploads these
+files to Redacted, Orpheus or DIC.
 
-The following command will scan through every FLAC you have ever
-downloaded or uploaded (if it is in , determine which formats are needed, transcode
-the FLAC to each needed format, and upload each format to Redacted or Orpheus -- automatically.
+The following command will scan through every FLAC you have ever downloaded or
+uploaded (if it is in , determine which formats are needed, transcode the FLAC
+to each needed format, and upload each format to Redacted, Orpheus or DIC, automatically.
 
     $ ./red_ops_better
 
@@ -26,31 +27,20 @@ Once you've got Python installed, you will need a few modules: mechanize,
 mutagen, and requests. Try this:
 
     $ pip3 install -r requirements.txt
-
 	
 If you are on a seedbox, or a system without root priviliages, try this:
 
-
     $ pip3 install --user -r requirements.txt
-
 
 Furthermore, you need several external programs: mktorrent 1.1+, flac,
 lame, and sox. The method of installing these programs varies
 depending on your operating system, but if you're using something like
 Ubuntu you can do this:
 
-    # aptitude install mktorrent flac lame sox
-	
+    # apt install mktorrent flac lame sox
 
 If you are on a seedbox and you lack the privilages to install packages,
 you could contact your provider to have these packages installed.
-
-At this point you may execute the following command:
-
-    $ ./red_ops_better
-
-And you will receive a notification stating that you should edit the
-configuration file at same directory /config (if you're lucky).
 
 Configuration
 -------------
@@ -122,41 +112,6 @@ a prompt will appear. The default is '0' which ignores these occurrences.
 
 `piece_length` used with MKtorrent default value.
 
-You should end up with something like this:
-
-	[RED]
-	username = YOur_username//LEAVE black if you are using Session Cookie of RED
-	password = Your_Password//Leave blank if you are using Session Cookie of RED
-	session_cookie = Working_Session_Cookie_for_Red
-	data_dir = /download/directory/for/RED
-	output_dir = /transcode/directory/for/RED
-	torrent_dir = /watch/directory/for/RED
-	formats = flac, v0, 320
-	media = dat, cd, soundboard, web, sacd, vinyl, dvd, blu-ray
-	24bit_behaviour = 0
-	tracker = https://flacsfor.me/
-	api = https://redacted.ch
-	source = RED
-	piece_length = 18
-
-	[OPS]
-	username = YOur_username//LEAVE black if you are using Session Cookie of OPS
-	password = Your_Password//Leave blank if you are using Session Cookie of OPS
-	session_cookie = Working_Session_Cookie_OF_OPS
-	data_dir = /download/directory/for/OPS
-	output_dir = /transcode/directory/for/OPS
-	torrent_dir = /watch/directory/for/OPS
-	formats = flac, v0
-	media = sacd, vinyl, soundboard, web, blu-ray, dat, cd, dvd
-	24bit_behaviour = 0
-	tracker = https://home.opsfet.ch/
-	api = https://orpheus.network
-	source = OPS
-	piece_length = 18
-
-
-Alright! Now you're ready to use red_ops_better.
-
 Usage
 -----
 
@@ -175,9 +130,9 @@ optional arguments:
   -j THREADS, --threads THREADS
                         number of threads to use when transcoding (default: 3)
   --config CONFIG       the location of the configuration file (default:
-                        /home/pi/Auto_Transcode_Fla/SessionRED/config)
+                        $PROJECT_FOLDER/config)
   --cache CACHE         the location of the cache (default:
-                        /home/pi/Auto_Transcode_Fla/SessionRED/cache)
+                        $PROJECT_FOLDER/cache)
   -U, --no-upload       don't upload new torrents (in case you want to do it
                         manually) (default: False)
   -E, --no-24bit-edit   don't try to edit 24-bit torrents mistakenly labeled
@@ -224,10 +179,5 @@ Your first time running red_ops_better might take a while, but after it has
 successfully gone through and checked everything, it'll go faster any
 consecutive runs due to its caching method.
 
-
-
-Note: 
-1) On first run it will encrypt your config file. Please provide a strong Password(Minimum len 10,Mixture of (Upper case, Lower Case, a number and Special charector i.e. R3dBett3r!# ) and remember it.
-If you forget the password delete the config.enc file from the directory. It will ask you to create config file again.
-
-2) If you like to use this for OPS as default. Open red_ops_better and search for "default='RED'" and replace RED to OPS.
+If you like to use this for OPS as default. Open red_ops_better and search for
+"default='RED'" and replace RED to OPS.
