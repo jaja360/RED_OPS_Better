@@ -96,14 +96,12 @@ def main():
 
     username = config_dict['username']
     password = config_dict['password']
-
+    api_key = config_dict['api_key']
     try:
         session_cookie = os.path.expanduser(config_dict['session_cookie'])
     except configparser.NoOptionError:
         session_cookie = None
-    if not username and not password and not session_cookie:
-        print('Configuration file requires Username and password or Session Cookie.')
-        sys.exit(2)
+
     do_24_bit = config_dict['24bit_behaviour']
     data_dir = [os.path.expanduser(d) for d in config_dict['data_dir'].split(';')]
     try:
@@ -136,7 +134,7 @@ def main():
     upload_torrent = not args.no_upload
 
     print("Logging in to " + trackerLogingto + "....")
-    api = RedOpsAPI.RED_OPS_API(username, password, session_cookie, endpoint, args.totp)
+    api = RedOpsAPI.RED_OPS_API(username, password, session_cookie, endpoint, args.totp, api_key)
 
     try:
         seen = pickle.load(open(args.cache, 'rb'))
@@ -165,7 +163,7 @@ def main():
             candidates = [(int(query['id']), int(query['torrentid'])) for query in\
                     [dict(parse_qsl(urlparse(url).query)) for url in args.release_urls]]
     else:
-        candidates = api.get_candidates(skip=seen, media=supported_media)
+        candidates = api.snatched()
 
     for groupid, torrentid in candidates:
         group = api.request('torrentgroup', id=groupid)
@@ -197,8 +195,7 @@ def main():
             releasemedia  = "Release Media    : {0}" .format(media)
             releaseurl    = "Release URL      : {0}" .format(api.release_url(group, torrent))
 
-            print("\n\n")
-            print((releaseartist + "\n" + releasename + "\n" + releaseyear + "\n" + releasemedia + "\n" + releaseurl + "\n\n" ))
+            print(("\n" + releaseartist + "\n" + releasename + "\n" + releaseyear + "\n" + releasemedia + "\n" + releaseurl + "\n" ))
 
         if not torrent['filePath']:
             for d in data_dir:
@@ -304,12 +301,7 @@ def main():
                         if upload_torrent:
                             permalink = api.permalink(torrent)
                             description = create_description(torrent, flac_dir, format, permalink)
-                            if TrackerArgs == 'OPS':
-                                api.uploadOPS(group, torrent, new_torrent, format, description)
-                            elif TrackerArgs == 'RED':
-                                api.uploadRED(group, torrent, new_torrent, format, description)
-                            elif TrackerArgs == 'DIC':
-                                api.uploadRED(group, torrent, new_torrent, format, description)
+                            api.upload(group, torrent, new_torrent, format, description)
                         shutil.copy(new_torrent, local_torrent_dir)
                         print("done!")
                         if args.single: break
