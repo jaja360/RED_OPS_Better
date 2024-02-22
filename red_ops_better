@@ -64,11 +64,11 @@ def cred_file_encrypt_decryption(cipher, authFile, creds=None, encry_decry=None)
     if encry_decry == 1:
         with open(authFile, 'w') as outfile:
             json.dump(creds, outfile, indent=2)
-        byte_string = json.dumps(creds).encode('utf-8') 
-        byte_ciphertext = cipher.encrypt(byte_string)    
+        byte_string = json.dumps(creds).encode('utf-8')
+        byte_ciphertext = cipher.encrypt(byte_string)
         with open(authFile_enc, "wb") as encrypt_file:
             encrypt_file.write(byte_ciphertext)
-            encrp_str_dict = json.loads(byte_string)          
+            encrp_str_dict = json.loads(byte_string)
             return encrp_str_dict
     elif encry_decry == 0:
         with open(authFile_enc, "rb") as decrypt_file:
@@ -104,8 +104,8 @@ def main():
 
     except:
         if not os.path.exists(os.path.dirname(args.config)) and not os.path.exists(authFile_enc):
-            os.makedirs(os.path.dirname(args.config))            
-        if not exists(authFile) and not exists(authFile_enc):        
+            os.makedirs(os.path.dirname(args.config))
+        if not exists(authFile) and not exists(authFile_enc):
             config.add_section('RED')
             config.set('RED', 'username', '')
             config.set('RED', 'password', '')
@@ -138,7 +138,7 @@ def main():
             os._exit(0)
     finally:
         print("Password Must include Minimum length (10), Capital and lower letter, number and special character")
-        password_provided = getpass("Provide a Password for Encry and Decrp: ")  # This is input in the form of a string        
+        password_provided = getpass("Provide a Password for Encry and Decrp: ")  # This is input in the form of a string
         count = 0
         while count < 1:
             if(any(x.isupper() for x in password_provided) and any(x.islower() for x in password_provided) and any(x.isdigit() for x in password_provided) and len(password_provided) >= 10):
@@ -146,13 +146,13 @@ def main():
                 count += 1
             else:
                 print("Password Must include Minimum length (10), Capital and lower letter, number and special character.")
-                password_provided = getpass("Provide a Password for Encry and Decrp: ")                
-            
+                password_provided = getpass("Provide a Password for Encry and Decrp: ")
+
         password = password_provided.encode()  # Convert to type bytes
 
         #CHANGE THIS - Recommend--To Change os.urandom(16), must be of type bytes
         #$python3.6 >>> import os >>> os.urandom(16) (Copy Output and Replace salt value)
-        salt = b'\xcfFI\xe8lgR\xdf!tt\xeeO\xc6\x12l\x13\xfa:\xf2\x13p\xfed\xca\x00\xfcb\xfe_`\xce=0\t\xbcRS[\xa7e)P\xeb\nrO&Z\x16\x9dvV;\x84q\x1d\xc7\x17Hq\x11\x8e\xca'  
+        salt = b'\xcfFI\xe8lgR\xdf!tt\xeeO\xc6\x12l\x13\xfa:\xf2\x13p\xfed\xca\x00\xfcb\xfe_`\xce=0\t\xbcRS[\xa7e)P\xeb\nrO&Z\x16\x9dvV;\x84q\x1d\xc7\x17Hq\x11\x8e\xca'
         kdf = PBKDF2HMAC(
             algorithm=hashes.SHA256(),
             length=32,
@@ -160,19 +160,19 @@ def main():
             iterations=1000000,
             backend=default_backend()
             )
-        key = base64.urlsafe_b64encode(kdf.derive(password)) 
+        key = base64.urlsafe_b64encode(kdf.derive(password))
         cipher = Fernet(key)
 
         if exists(authFile) and not exists(authFile_enc):
             file_response = cred_file_encrypt_decryption(cipher, authFile, OrderedDict_dict, encry_decry=1)
             if exists(authFile):
-                os.remove(authFile) 
+                os.remove(authFile)
 
         elif exists(authFile_enc):
             file_response = cred_file_encrypt_decryption(cipher, authFile_enc, encry_decry=0)
             if exists(authFile):
                 os.remove(authFile)
-             
+
         TrackerArgs = args.tracker.upper()
         if TrackerArgs == 'RED':
             config_dict = file_response['RED']
@@ -180,8 +180,11 @@ def main():
         elif TrackerArgs == 'OPS':
             config_dict = file_response['OPS']
             trackerLogingto = 'Orpheus Network'
+        elif TrackerArgs == 'DIC':
+            config_dict = file_response['DIC']
+            trackerLogingto = 'Dolphin Is Coming'
         else:
-            print("Tracker argument must be (RED or OPS).")
+            print("Tracker argument must be (RED or OPS or DIC).")
             sys.exit(2)
 
         username = config_dict['username']
@@ -195,7 +198,7 @@ def main():
             if exists(authFile_enc):
                 os.remove(authFile_enc)
             print('Configuration file requires Username and password or Session Cookie.')
-            sys.exit(2)            
+            sys.exit(2)
         do_24_bit = config_dict['24bit_behaviour']
         data_dir = [os.path.expanduser(d) for d in config_dict['data_dir'].split(';')]
         try:
@@ -263,16 +266,16 @@ def main():
         group = api.request('torrentgroup', id=groupid)
         if group != None:
             torrent = [t for t in group['torrents'] if t['id'] == torrentid][0]
-            
+
             artist = "";
             if len(group['group']['musicInfo']['artists']) > 2:
                 artist = "Various Artists"
             elif not group['group']['musicInfo']['artists'] and len(group['group']['musicInfo']['composers']) > 2:
                 artist = "Various Artists"
             elif len(group['group']['musicInfo']['artists']) == 2:
-                artist = group['group']['musicInfo']['artists'][0]['name'] + " & " + group['group']['musicInfo']['artists'][1]['name']                
+                artist = group['group']['musicInfo']['artists'][0]['name'] + " & " + group['group']['musicInfo']['artists'][1]['name']
             elif not group['group']['musicInfo']['artists'] and len(group['group']['musicInfo']['composers']) == 2:
-                artist = group['group']['musicInfo']['composers'][0]['name'] + " & " + group['group']['musicInfo']['composers'][1]['name']         
+                artist = group['group']['musicInfo']['composers'][0]['name'] + " & " + group['group']['musicInfo']['composers'][1]['name']
             elif not group['group']['musicInfo']['artists'] and len(group['group']['musicInfo']['composers']):
                 artist = group['group']['musicInfo']['composers'][0]['name']
             else:
@@ -322,7 +325,7 @@ def main():
                     if args.no_24bit_edit:
                         print("Release is actually 24-bit lossless, skipping.")
                         continue
-                    if int(do_24_bit) == 1:  
+                    if int(do_24_bit) == 1:
                         confirmation = raw_input("Mark release as 24bit lossless? y/n: ")
                         if confirmation != 'y':
                             continue
@@ -386,7 +389,7 @@ def main():
                             basename = artist + " - " + AlbumName + " (" + torrent['remasterTitle'] + ") " + "[" + year + "] (" + torrent['media'] + " - "
                         else:
                             basename = artist + " - " + AlbumName + " [" + year + "] (" + torrent['media'] + " - "
-                            
+
                         transcode_dir = transcode.transcode_release(flac_dir, local_output_dir, basename, format, max_threads=args.threads)
                         if transcode_dir == False:
                             print("Skipping - some file(s) in this release were incorrectly marked as 24bit.")
@@ -399,7 +402,9 @@ def main():
                             if TrackerArgs == 'OPS':
                                 api.uploadOPS(group, torrent, new_torrent, format, description)
                             elif TrackerArgs == 'RED':
-                                api.uploadRED(group, torrent, new_torrent, format, description)                                
+                                api.uploadRED(group, torrent, new_torrent, format, description)
+                            elif TrackerArgs == 'DIC':
+                                api.uploadRED(group, torrent, new_torrent, format, description)
                         shutil.copy(new_torrent, local_torrent_dir)
                         print("done!")
                         if args.single: break
@@ -416,6 +421,6 @@ def main():
         pickle.dump(seen, open(args.cache, 'wb'))
 
 if __name__ == "__main__":
-    authFile = "config" 
+    authFile = "config"
     authFile_enc = "config.enc"
     main()

@@ -29,7 +29,7 @@ class TranscodeDownmixException(TranscodeException):
 
 class UnknownSampleRateException(TranscodeException):
     pass
-    
+
 # In most Unix shells, pipelines only report the return code of the
 # last process. We need to know if any process in the transcode
 # pipeline fails, not just the last one.
@@ -250,7 +250,7 @@ def get_transcode_dir(flac_dir, output_dir, basename, output_format, resample):
         basename += "MP3 - 320)"
     else:
         basename += "MP3 - V2)"
-    
+
     while path_length_exceeds_limit(flac_dir, basename):
         basename = input("The file paths in this torrent exceed the 180 character limit. \n\
         The current directory name is: " + basename + " \n\
@@ -354,7 +354,9 @@ def make_torrent(input_dir, output_dir, tracker, passkey, piece_length, source):
     if source == 'OPS':
         torrent = os.path.join(output_dir, os.path.basename(input_dir)) + "_OPS.torrent"
     elif source == 'RED':
-        torrent = os.path.join(output_dir, os.path.basename(input_dir)) + "_RED.torrent" 
+        torrent = os.path.join(output_dir, os.path.basename(input_dir)) + "_RED.torrent"
+    elif source == 'DICMusic':
+        torrent = os.path.join(output_dir, os.path.basename(input_dir)) + "_DIC.torrent"
     if not os.path.exists(os.path.dirname(torrent)):
         os.path.makedirs(os.path.dirname(torrent))
     tracker_url = '{tracker}{passkey}/announce'.format(
